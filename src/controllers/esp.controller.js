@@ -9,11 +9,8 @@ const getEsp = async (req, res) => {
   const temperature = req.query.temp;
   const humidity = req.query.humidity;
   const lamp = req.query.lamp;
+  await Esp.create({ temperature, humidity }, { new: true });
   return res.json(req.query);
-  // Thực hiện các thao tác bạn muốn ở đây với dữ liệu nhận được từ query
-
-  res.send("Response from the API"); // Phản hồi từ API
-  return res.json({ esp });
 };
 
 module.exports = {
