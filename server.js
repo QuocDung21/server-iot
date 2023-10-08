@@ -17,6 +17,10 @@ db();
 app.use("/api/auth", authRouter);
 app.use("/api/esp", espRouter);
 
+app.use("/", (req, res) => {
+  return res.json("Server running");
+});
+
 app.listen(3000, function () {
   console.log("Server is running on port 3000");
 });
