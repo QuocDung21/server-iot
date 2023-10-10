@@ -9,8 +9,14 @@ const getEsp = async (req, res) => {
   const temperature = req.query.temp;
   const humidity = req.query.humidity;
   const lamp = req.query.lamp;
-  await Esp.create({ temperature, humidity }, { new: true });
-  return res.json(req.query);
+  try {
+    if (temperature != null || humidity != null) {
+      await Esp.create({ temperature, humidity }, { new: true });
+      return res.json(req.query);
+    }
+  } catch (error) {
+    return res.json(error.mess);
+  }
 };
 
 module.exports = {

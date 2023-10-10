@@ -41,9 +41,9 @@ const login = async (req, res) => {
       "Set-Cookie",
       cookie.serialize("token", token, {
         httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60, // Thời gian tồn tại 1 tuần (7 ngày) tính bằng giây
-        sameSite: "strict", // Đảm bảo cookie chỉ gửi trong cùng một trang
-        secure: process.env.NODE_ENV === "production", // Sử dụng HTTPS ở môi trường sản xuất
+        maxAge: 7 * 24 * 60 * 60,
+        sameSite: "strict",
+        secure: process.env.NODE_ENV === "production",
       })
     );
 
