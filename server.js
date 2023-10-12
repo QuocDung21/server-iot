@@ -20,7 +20,7 @@ app.use("/", (req, res) => {
   return res.json("Server running");
 });
 
-app.listen(3000, function () {
+const server = app.listen(3000, function () {
   console.log("Server is running on port 3000");
 });
 
