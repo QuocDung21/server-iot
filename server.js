@@ -13,7 +13,6 @@ app.use(bodyParser.json());
 
 db();
 
-// Sử dụng router trong ứng dụng chính
 app.use("/api/auth", authRouter);
 app.use("/api/esp", espRouter);
 
