@@ -1,5 +1,10 @@
 const Esp = require("../models/esp.model");
 
+let io;
+setTimeout(() => {
+  io = require("../../socket.js").get();
+}, 1000);
+
 const getEsp = async (req, res) => {
   try {
     const itensity = req.query.itensity;
@@ -33,7 +38,7 @@ const getEsp = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: error });
-  } 
+  }
 };
 
 module.exports = {
