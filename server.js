@@ -23,3 +23,17 @@ app.use("/", (req, res) => {
 app.listen(3000, function () {
   console.log("Server is running on port 3000");
 });
+
+const io = require("./socket.js").init(server);
+
+io.on("connection", (socket) => {
+  console.log("client-connect");
+
+  socket.on("sendmess", (data) => {
+    module.exports = data;
+  });
+
+  socket.on("disconnect", () => {
+    console.log("client disconnect");
+  });
+});
