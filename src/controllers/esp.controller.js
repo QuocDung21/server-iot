@@ -19,7 +19,7 @@ const getEsp = async (req, res) => {
     };
 
     //add mongo
-    const newob = new esp32({
+    const newob = new Esp({
       nhietdo: temp,
       doam: humidity,
       mua: rain,
