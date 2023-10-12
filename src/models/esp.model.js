@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-// Định nghĩa schema cho dữ liệu ESP
 const espSchema = new mongoose.Schema({
   id: {
     type: Schema.Types.ObjectId,
