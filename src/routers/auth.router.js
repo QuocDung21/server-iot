@@ -1,38 +1,63 @@
-const express = require("express");
-const AuthController = require("../controllers/auth.controller");
-const router = express.Router();
+import React, { useRef, useState } from "react";
+import axios from "axios";
+import Webcam from "react-webcam";
 
-const verificationCodes = new Map();
+const FaceRegistration = () => {
+  const webcamRef = useRef(null);
+  const [registrationStatus, setRegistrationStatus] = useState("");
 
-router.post("/login", AuthController.login);
+  const handleRegisterFace = async () => {
+    try {
+      const imageSrc = webcamRef.current.getScreenshot();
+      const formData = new FormData();
+      formData.append("photos", dataURLtoFile(imageSrc, "photo.jpg"));
+      formData.append("store", "1");
 
-router.post("/register", AuthController.register);
+      const response = await axios.post(
+        "https://api.luxand.cloud/v2/person/545a80de-c58c-11ed-a755-0242ac120003",
+        formData,
+        {
+          headers: {
+            token: "9587ab96af2540a9b952cae9247fcf7f", // Thay YOUR_API_TOKEN bằng mã thông báo API thực tế
+            ...formData.getHeaders(),
+          },
+        }
+      );
 
-router.get("/verify", (req, res) => {
-  const code = req.query.code;
-  if (!code) {
-    return res.status(400).json({ message: "Mã xác thực không hợp lệ" });
-  }
+      if (response.data.isIdentical) {
+        setRegistrationStatus("Khuôn mặt đã được đăng ký thành công.");
+      } else {
+        setRegistrationStatus(
+          "Không thể xác minh khuôn mặt. Vui lòng thử lại."
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      setRegistrationStatus("Lỗi xảy ra khi đăng ký khuôn mặt.");
+    }
+  };
 
-  const email = verificationCodes.get(code);
-  if (!email) {
-    return res
-      .status(400)
-      .json({ message: "Mã xác thực không hợp lệ hoặc đã hết hạn" });
-  }
+  // Hàm chuyển đổi dữ liệu ảnh base64 thành tệp
+  const dataURLtoFile = (dataURL, fileName) => {
+    const arr = dataURL.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], fileName, { type: mime });
+  };
 
-  // Xác thực tài khoản và xóa mã xác thực
-  const user = users.find((u) => u.email === email);
-  if (user) {
-    user.verified = true;
-    verificationCodes.delete(code);
-    return res.json({ message: "Tài khoản đã được xác thực thành công" });
-  } else {
-    return res.status(400).json({ message: "Tài khoản không tồn tại" });
-  }
-});
+  return (
+    <div>
+      <h1>Đăng ký khuôn mặt</h1>
+      <Webcam ref={webcamRef} screenshotFormat="image/jpeg" />
+      <button onClick={handleRegisterFace}>Đăng ký khuôn mặt</button>
+      <p>{registrationStatus}</p>
+    </div>
+  );
+};
 
-// Trang đăng xuất
-router.get("/", AuthController.listUsers);
-
-module.exports = router;
+export default FaceRegistration;

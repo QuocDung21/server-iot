@@ -8,6 +8,19 @@ require("dotenv").config();
 
 const app = express();
 
+const { execSync } = require("child_process");
+
+// const currentTemperature = 23;
+// const currentHumidity = 72;
+
+// const result = execSync(
+//   `python predict.py ${currentTemperature} ${currentHumidity}`
+// );
+
+// const rainPrediction = parseInt(result.toString().trim(), 10);
+
+// console.log("Khả năng mưa:", rainPrediction);
+
 app.use(cors());
 app.use(bodyParser.json());
 

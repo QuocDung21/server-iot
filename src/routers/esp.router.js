@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.get("/", EspController.getEsp);
 
-router.get("/", EspController.checkRain);
+router.get("/ai", EspController.checkRain);
 
 module.exports = router;

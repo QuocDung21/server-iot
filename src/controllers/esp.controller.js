@@ -1,43 +1,84 @@
 const Esp = require("../models/esp.model");
-const tf = require("@tensorflow/tfjs");
-require("@tensorflow/tfjs-node");
+const { execSync } = require("child_process");
 
 let io;
 setTimeout(() => {
-    io = require("../../socket.js").get();
+  io = require("../../socket.js").get();
 }, 1000);
 
 const checkRain = async (req, res) => {
   try {
-    // Lấy 7 mốc thời gian gần nhất
-    const recentData = await Esp.find().sort({ createdAt: -1 }).limit(7);
+    const highRainProbabilityData = [
+      { temperature: 20, humidity: 85 }, // Có mưa
+      { temperature: 18, humidity: 80 }, // Có mưa
+      { temperature: 22, humidity: 90 }, // Có mưa
+      { temperature: 21, humidity: 88 }, // Có mưa
+      { temperature: 19, humidity: 82 }, // Có mưa
+      { temperature: 20, humidity: 84 }, // Có mưa
+      { temperature: 17, humidity: 77 }, // Có mưa
+    ];
 
-    // Tạo mảng lưu trữ nhiệt độ và độ ẩm
-    const temperatureAndHumidity = [];
+    const predictions = highRainProbabilityData.map((data) => {
+      const temperature = data.temperature;
+      const humidity = data.humidity;
+      const result = execSync(`python predict.py ${temperature} ${humidity}`);
+      const rainPrediction = parseFloat(result.toString().trim());
+      return { temperature, humidity, rainPrediction };
+    });
 
-    // Duyệt qua các mốc thời gian gần nhất
-    for (const data of recentData) {
-      temperatureAndHumidity.push([data.nhietdo, data.doam]);
-    }
+    // Tính tỷ lệ trung bình của khả năng mưa
+    const averageRainProbability =
+      predictions.reduce(
+        (sum, prediction) => sum + prediction.rainPrediction,
+        0
+      ) / predictions.length;
 
-    // Tải mô hình đã được huấn luyện trước đó (ví dụ: model.json)
-    const model = await tf.loadLayersModel("file://model.json");
+    const percentRain = (averageRainProbability * 100).toFixed(2);
 
-    // Chuẩn bị dữ liệu đầu vào
-    const input = tf.tensor(temperatureAndHumidity);
-
-    // Dự đoán khả năng mưa
-    const prediction = model.predict(input);
-
-    // Lấy giá trị dự đoán
-    const rainProbabilities = prediction.arraySync();
-
-    res.json({ success: true, rainProbabilities: rainProbabilities });
+    res.json({ success: true, averageRainProbability: `${percentRain}%` });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// const checkRain = async (req, res) => {
+//   try {
+//     const recentData = await Esp.find().sort({ createdAt: -1 }).limit(7);
+
+//     const highRainProbabilityData = [
+//       { temperature: 20, humidity: 85 }, // Có mưa
+//       { temperature: 18, humidity: 80 }, // Có mưa
+//       { temperature: 22, humidity: 90 }, // Có mưa
+//       { temperature: 21, humidity: 88 }, // Có mưa
+//       { temperature: 19, humidity: 82 }, // Có mưa
+//       { temperature: 20, humidity: 84 }, // Có mưa
+//       { temperature: 17, humidity: 77 }, // Có mưa
+//     ];
+
+//     const predictions = recentData.map((data) => {
+//       const temperature = data.nhietdo;
+//       const humidity = data.doam;
+//       const result = execSync(`python predict.py ${temperature} ${humidity}`);
+//       const rainPrediction = parseFloat(result.toString().trim());
+//       return { temperature, humidity, rainPrediction };
+//     });
+
+//     // Tính tỷ lệ trung bình của khả năng mưa
+//     const averageRainProbability =
+//       predictions.reduce(
+//         (sum, prediction) => sum + prediction.rainPrediction,
+//         0
+//       ) / predictions.length;
+
+//     console.log(predictions);
+
+//     res.json({ success: true, averageRainProbability });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
 
 const getEsp = async (req, res) => {
   try {
