@@ -6,6 +6,9 @@ const houseSchema = new mongoose.Schema({
         type: String,
         default: "house_data"
     },
+    test : {
+      type: String,
+    },
     door: [
         {
             pass: {
