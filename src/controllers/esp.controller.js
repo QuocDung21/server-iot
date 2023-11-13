@@ -42,44 +42,6 @@ const checkRain = async (req, res) => {
   }
 };
 
-// const checkRain = async (req, res) => {
-//   try {
-//     const recentData = await Esp.find().sort({ createdAt: -1 }).limit(7);
-
-//     const highRainProbabilityData = [
-//       { temperature: 20, humidity: 85 }, // Có mưa
-//       { temperature: 18, humidity: 80 }, // Có mưa
-//       { temperature: 22, humidity: 90 }, // Có mưa
-//       { temperature: 21, humidity: 88 }, // Có mưa
-//       { temperature: 19, humidity: 82 }, // Có mưa
-//       { temperature: 20, humidity: 84 }, // Có mưa
-//       { temperature: 17, humidity: 77 }, // Có mưa
-//     ];
-
-//     const predictions = recentData.map((data) => {
-//       const temperature = data.nhietdo;
-//       const humidity = data.doam;
-//       const result = execSync(`python predict.py ${temperature} ${humidity}`);
-//       const rainPrediction = parseFloat(result.toString().trim());
-//       return { temperature, humidity, rainPrediction };
-//     });
-
-//     // Tính tỷ lệ trung bình của khả năng mưa
-//     const averageRainProbability =
-//       predictions.reduce(
-//         (sum, prediction) => sum + prediction.rainPrediction,
-//         0
-//       ) / predictions.length;
-
-//     console.log(predictions);
-
-//     res.json({ success: true, averageRainProbability });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ success: false, message: error.message });
-//   }
-// };
-
 const getEsp = async (req, res) => {
   try {
     const itensity = req.query.itensity;

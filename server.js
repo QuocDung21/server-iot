@@ -1,6 +1,7 @@
 const express = require("express");
 const authRouter = require("./src/routers/auth.router.js");
 const espRouter = require("./src/routers/esp.router.js");
+const houseRouter = require("./src/routers/house.router.js");
 const db = require("./src/config/dbConnect.js");
 var bodyParser = require("body-parser");
 const cors = require("cors");
@@ -8,18 +9,6 @@ require("dotenv").config();
 
 const app = express();
 
-const { execSync } = require("child_process");
-
-// const currentTemperature = 23;
-// const currentHumidity = 72;
-
-// const result = execSync(
-//   `python predict.py ${currentTemperature} ${currentHumidity}`
-// );
-
-// const rainPrediction = parseInt(result.toString().trim(), 10);
-
-// console.log("Khả năng mưa:", rainPrediction);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -28,6 +17,7 @@ db();
 
 app.use("/api/auth", authRouter);
 app.use("/api/esp", espRouter);
+app.use("/api/house", houseRouter);
 
 app.use("/", (req, res) => {
   return res.json("Server running");
