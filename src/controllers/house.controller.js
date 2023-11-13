@@ -1,5 +1,4 @@
 const House = require("../models/house.model");
-const {execSync} = require("child_process");
 
 let io;
 setTimeout(() => {

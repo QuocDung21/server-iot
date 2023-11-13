@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const espSchema = new mongoose.Schema({
+const houseSchema = new mongoose.Schema({
     id: {
         type: Schema.Types.ObjectId,
     },
@@ -23,6 +23,6 @@ const espSchema = new mongoose.Schema({
     },
 });
 
-const Esp = mongoose.model("Esp", espSchema);
+const House = mongoose.model("House", houseSchema);
 
-module.exports = Esp;
+module.exports = House;
