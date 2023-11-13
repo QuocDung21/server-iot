@@ -6,9 +6,16 @@ const houseSchema = new mongoose.Schema({
         type: String,
         default: "house_data"
     },
-    test : {
-      type: String,
-    },
+    esp: [
+        {
+            humid: {
+                type: String,
+            },
+            temp: {
+                type: String,
+            }
+        }
+    ],
     door: [
         {
             pass: {

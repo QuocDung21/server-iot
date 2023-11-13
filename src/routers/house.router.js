@@ -7,10 +7,6 @@ const router = express.Router();
 router.get("/", HouseController.updateHouse);
 router.get("/data", HouseController.getHouse);
 
-router.get("/test", (req, res) => {
-    House.findOneAndUpdate({name: "house_data"}, {
-        test: "123"
-    })
-})
+router.get("/esp", HouseController.updateEsp);
 
 module.exports = router;

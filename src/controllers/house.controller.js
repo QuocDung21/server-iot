@@ -36,6 +36,24 @@ const getHouse = async (req, res) => {
     }
 };
 
+const updateEsp = async (req, res) => {
+    const {temp, humid} = req.query
+    console.log(temp, humid)
+    try {
+        const esp = await House.findOneAndUpdate({name: "house_data"}, {
+            esp: {
+                temp,
+                humid
+            }
+        })
+        return res.status(200).json({success: "success", esp: esp})
+    } catch (error) {
+        return res.status(500).json({error})
+    }
+
+
+}
+
 
 const update_door = async (req, res) => {
     try {
@@ -47,5 +65,5 @@ const update_door = async (req, res) => {
 
 
 module.exports = {
-    getHouse, updateHouse, update_door
+    getHouse, updateHouse, update_door, updateEsp
 };
